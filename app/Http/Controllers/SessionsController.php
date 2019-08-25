@@ -21,7 +21,7 @@ class SessionsController extends Controller
             'password' => 'required|min:6'
         ]);
 
-        if(Auth::attempt($sign_date)){
+        if(Auth::attempt($sign_date,$request->has('remember'))){
             //登陆成功
             session()->flash('success', '欢迎回来');
             return redirect()->route('users.show', [Auth::user()]);
