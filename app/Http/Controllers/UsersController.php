@@ -35,8 +35,10 @@ class UsersController extends Controller
 
         //注册之后自动登陆
         Auth::login($user);
-        
+
         session()->flash('success', '欢迎，您将在这里开启有一段新的旅程~');
         return redirect()->route('users.show', [$user]);
     }
+
+
 }
