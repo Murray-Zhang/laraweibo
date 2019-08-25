@@ -18,3 +18,10 @@ Route::get('/about', 'StaticPagesController@about')->name('about');
 Route::get('/signup', 'UsersController@create')->name('signup');
 
 Route::resource('users', 'UsersController');
+
+//显示登陆页面
+Route::get('/login', 'SessionsController@create')->name('login');
+//创建登陆会话
+Route::post('/login', 'SessionsController@store')->name('login');
+//退出，销毁会话
+Route::delete('/logout', 'SessionsController@destroy')->name('logout');
