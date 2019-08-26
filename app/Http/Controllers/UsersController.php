@@ -8,8 +8,21 @@ use Illuminate\Support\Facades\Auth;
 
 class UsersController extends Controller
 {
+    //过滤动作
+    public function __construct()
+    {
+        $this->middleware('auth',[
+            'except' => ['show', 'create', 'store']
+        ]);
+
+        $this->middleware('guest', [
+            'only' => ['create']
+        ]);
+    }
+
     public function create()
     {
+
         return view('users/create');
     }
 
@@ -43,11 +56,16 @@ class UsersController extends Controller
     //个人中心修改页面
     public function edit(User $user)
     {
+        //判断用户授权
+        $this->authorize('update', $user);
         return view('users/edit', compact('user'));
     }
 
     public function update(User $user, Request $request)
     {
+        //判断用户授权
+        $this->authorize('update', $user);
+
         $this->validate($request, [
             'name' => 'required|max:50',
             'password' => 'nullable|confirmed|min:6',
