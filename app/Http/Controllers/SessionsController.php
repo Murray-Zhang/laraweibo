@@ -9,6 +9,7 @@ class SessionsController extends Controller
 {
     public function __construct()
     {
+        //只允许未登录用户访问的动做
         $this->middleware('guest', [
             'only' => ['create']
         ]);
@@ -30,11 +31,16 @@ class SessionsController extends Controller
         ]);
 
         if(Auth::attempt($sign_date,$request->has('remember'))){
-            //登陆成功
-            session()->flash('success', '欢迎回来');
-
-            $defaultRoute = route('users.show', [Auth::user()]);
-            return redirect()->intended($defaultRoute);
+            if(Auth::user()->activated){
+                //登陆成功
+                session()->flash('success', '欢迎回来');
+                $defaultRoute = route('users.show', [Auth::user()]);
+                return redirect()->intended($defaultRoute);
+            }else{
+                Auth::logout();
+                session()->flash('warning', '你的账号未激活，请点击激活邮件激活');
+                return redirect('/');
+            }
         }else{
             //登陆失败
             session()->flash('danger', '很抱歉，您的邮箱和密码不匹配');
