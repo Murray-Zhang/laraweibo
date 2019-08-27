@@ -30,8 +30,10 @@ class UsersController extends Controller
         return view('users/create');
     }
 
+    //个人中心展示
     public function show(User $user)
     {
+        $user = User::withCount(['statuses', 'followers', 'followings'])->find($user->id);
         $statuses = $user->statuses()->orderBy('created_at', 'desc')->paginate(30);
         return view('users/show', compact('user', 'statuses'));
     }
