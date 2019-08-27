@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Status;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 class StatusesController extends Controller
@@ -26,8 +27,11 @@ class StatusesController extends Controller
         return back();
     }
 
-    public function destroy()
+    public function destroy(Status $status)
     {
-
+        $this->authorize('destroy', $status);
+        $status->delete();
+        session()->flash('success', '您已经成功删除');
+        return back();
     }
 }
