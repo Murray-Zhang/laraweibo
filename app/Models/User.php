@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class User extends Authenticatable
@@ -60,6 +61,17 @@ class User extends Authenticatable
     public function statuses()
     {
         return $this->hasMany('App\Models\Status');
+    }
+
+
+    //我的和我关注的人的文章列表
+    public function feed()
+    {
+        $nowUserId = Auth::id();
+        //当前用户关注的的所有对象的id集合
+        $myFollowUsersId = $this->followings->pluck('id')->toArray();
+        array_push($myFollowUsersId, $nowUserId);
+        return Status::whereIn('user_id', $myFollowUsersId)->with('user')->orderBy('created_at', 'desc');
     }
 
 

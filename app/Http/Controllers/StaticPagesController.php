@@ -13,7 +13,7 @@ class StaticPagesController extends Controller
         $user = \App\Models\User::withCount(['statuses', 'followers', 'followings'])->find(Auth::id());
         $feed_items = [];
         if(Auth::check()){
-            $feed_items = Auth::User()->statuses()->orderBy('created_at', 'desc')->paginate(10);
+            $feed_items = Auth::User()->feed()->paginate(10);
         }
         return view('staticpages/home', compact('feed_items','user'));
     }
