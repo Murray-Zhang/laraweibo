@@ -30,4 +30,10 @@ class UserPolicy
     {
         return $currentUser->is_admin && $currentUser->id !== $user->id;
     }
+
+    //关注授权，不能关注自己
+    public function follow(User $myUser, User $user)
+    {
+        return $myUser->id !== $user->id;
+    }
 }

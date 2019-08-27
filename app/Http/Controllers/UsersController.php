@@ -149,4 +149,29 @@ class UsersController extends Controller
         $users = $user->followers()->paginate(10);
         return view('users.show_follow', compact('title', 'users'));
     }
+
+    //点击关注
+    public function doFollow(User $user)
+    {
+        $this->authorize('follow', $user);
+        $nowUser = Auth::User();
+
+        if (!$nowUser->isFollowing($user->id)) {
+            $nowUser->follow($user->id);
+        }
+
+        return redirect()->route('users.show', $user->id);
+    }
+
+    //取消关注
+    public function noFollow(User $user)
+    {
+        $this->authorize('follow', $user);
+        $nowUser = Auth::user();
+        if ($nowUser->isFollowing($user->id)) {
+            $nowUser->unfollow($user->id);
+        }
+
+        return redirect()->route('users.show', $user->id);
+    }
 }

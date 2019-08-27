@@ -81,7 +81,7 @@ class User extends Authenticatable
             $user_ids = compact('user_ids');
         }
 
-        $this->followings()->syncWithoutDetaching($user_ids);
+        return $this->followings()->syncWithoutDetaching($user_ids);
     }
     //取消关注
     public function unfollow($user_ids)
@@ -89,12 +89,12 @@ class User extends Authenticatable
         if(!is_array($user_ids)){
             $user_ids = compact('user_ids');
         }
-        $this->followings()->detach($user_ids);
+        return $this->followings()->detach($user_ids);
     }
 
     //判断当前用户是否关注了某个用户
     public function isFollowing($user_id)
     {
-        return $this->followings()->contains($user_id);
+        return $this->followings->pluck('id')->contains($user_id);
     }
 }
